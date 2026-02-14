@@ -40,9 +40,18 @@ install_distro() {
   # 如果需要自动下载，用户传 URL
   if [ -n "$url" ]; then
     print_msg "Downloading from $url"
-    wget -O "/tmp/${distro}.tar.xz" "$url"
-    tar -C "$CHROOT_BASE/$distro" -xf "/tmp/${distro}.tar.xz"
-    rm -f "/tmp/${distro}.tar.xz"
+    filename=$(basename $url)
+    wget -O "/tmp/$filename" "$url" || {
+      print_msg "Download faided"
+      exit 1
+    }
+    tar -C "$CHROOT_BASE/$distro" -xf "/tmp/$filename" || {
+      print_msg "Extract failed"
+      rm -f "/tmp/$filename"
+      exit 1
+    }
+    # Clean UP
+    rm -rf "/tmp/$filename"
   fi
   print_msg "$distro installed at $CHROOT_BASE/$distro"
 }
