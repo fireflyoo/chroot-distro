@@ -79,7 +79,7 @@ login_chroot() {
         mount --rbind /dev "$CHROOT_BASE/$distro/dev"
   fi
   # 进入 chroot
-  chroot "$CHROOT_BASE/$distro" /usr/bin/env -i HOME=/root TERM=$TERM HOSTNAME=localhost PS1='\u@$(cat /etc/hostname):\w\$' /bin/bash --login
+  chroot "$CHROOT_BASE/$distro" su - root
 }
 
 cmd="$1"
